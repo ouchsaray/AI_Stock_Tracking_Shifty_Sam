@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shifty Sam's Stock Tracker</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header with Logo -->
+        <header class="header">
+            <img src="images/logo.png" alt="Shifty Sam's Stock Tracker" class="logo">
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Action Panel - Contains input and controls -->
+            <div class="action-panel" id="actionPanel">
+                <h1 class="title">Stock Price Predictor</h1>
+                
+                <p class="description">
+                    Enter stock ticker symbols below to track and generate AI-powered prediction reports.
+                    Add multiple stocks using the + button.
+                </p>
+
+                <!-- Stock Input Section -->
+                <div class="stock-input-section">
+                    <form id="ticker-input-form">
+                        <label for="ticker-input" id="ticker-label">Enter a stock ticker:</label>
+                        <div class="input-wrapper">
+                            <input 
+                                type="text" 
+                                id="ticker-input" 
+                                class="stock-input" 
+                                placeholder="Enter ticker (e.g., TSLA)"
+                                maxlength="10"
+                            >
+                            <button type="submit" class="add-btn" id="addBtn" title="Add stock">+</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Tracked Stocks Display -->
+                <div class="ticker-choice-display" id="trackedStocks">
+                    <!-- Stock tags will be added here dynamically -->
+                </div>
+
+                <!-- Generate Report Button -->
+                <button class="generate-report-btn" id="generateBtn" disabled>
+                    Generate Report
+                </button>
+            </div>
+
+            <!-- Loading Panel -->
+            <div class="loading-panel" id="loadingPanel">
+                <div class="spinner"></div>
+                <p id="api-message">Fetching stock data...</p>
+            </div>
+
+            <!-- Output Panel - Shows the generated report -->
+            <div class="output-panel" id="outputPanel">
+                <h2>Stock Analysis Report</h2>
+                <div id="reportContent"></div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Powered by OpenAI</p>
+            <div class="disclaimer">
+                <span class="warning-icon">⚠️</span>
+                <p><strong>Disclaimer:</strong> This application is for educational and research purposes only. Stock predictions are not financial advice. Always do your own research before making investment decisions.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script type="module" src="app.js"></script>
+</body>
+</html>
