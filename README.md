@@ -47,6 +47,31 @@ This project uses artificial intelligence and machine learning techniques to ana
 3. Data is sent to OpenAI for analysis
 4. OpenAI generates the prediction report
 
+## OpenAI Messages Array
+
+```
+                    ┌─────────────────────────────┐
+                    │      Messages Array         │
+                    │                             │
+ instructions ────▶ │  ┌───────────────────────┐  │        ┌─────────────────┐
+                    │  │      { system }       │  │        │                 │
+                    │  └───────────────────────┘  │ ─────▶ │     OpenAI      │
+                    │  ┌───────────────────────┐  │        │                 │
+ user's input ────▶ │  │       { user }        │  │        └────────┬────────┘
+                    │  └───────────────────────┘  │                 │
+                    │                             │                 ▼
+                    └─────────────────────────────┘        ┌─────────────────┐
+                                                           │                 │
+                                                           │  { assistant }  │
+                                              AI output ◀──│                 │
+                                                           └─────────────────┘
+```
+
+**Message Roles:**
+- **system**: Instructions that define how the AI should behave and analyze stock data
+- **user**: The stock data from Polygon.io that needs to be analyzed
+- **assistant**: The AI-generated prediction report returned to the user
+
 ## Getting Started
 
 ### Prerequisites
@@ -56,11 +81,18 @@ This project uses artificial intelligence and machine learning techniques to ana
 
 ### API Setup
 
-1. **Get your Polygon.io API Key:**
+#### 1. Get your Polygon.io API Key
    - Go to [Polygon.io](https://polygon.io/) and create a free account
    - Navigate to your dashboard and copy your API key
 
-2. **Create the config file:**
+#### 2. Get your OpenAI API Key
+   - Go to [OpenAI Platform](https://platform.openai.com/) and sign up or log in
+   - Navigate to **API Keys** section: https://platform.openai.com/api-keys
+   - Click **"Create new secret key"**
+   - Give it a name (e.g., "Shifty Sam's Stock Tracker")
+   - Copy the key immediately (you won't be able to see it again!)
+
+#### 3. Create the config file
    
    Create a new file called `config.js` in the root directory with the following content:
 
@@ -69,11 +101,12 @@ This project uses artificial intelligence and machine learning techniques to ana
    // API Configuration - This file is gitignored
    
    export const config = {
-       POLYGON_API_KEY: 'your_polygon_api_key_here'
+       POLYGON_API_KEY: 'your_polygon_api_key_here',
+       OPENAI_API_KEY: 'your_openai_api_key_here'
    };
    ```
 
-   Replace `'your_polygon_api_key_here'` with your actual Polygon.io API key.
+   Replace the placeholder values with your actual API keys.
 
    **Reference:** The `config.example.js` file shows the expected structure:
 
@@ -83,11 +116,12 @@ This project uses artificial intelligence and machine learning techniques to ana
    // Copy this file to config.js and add your real API keys
    
    export const config = {
-       POLYGON_API_KEY: 'your_polygon_api_key_here'
+       POLYGON_API_KEY: 'your_polygon_api_key_here',
+       OPENAI_API_KEY: 'your_openai_api_key_here'
    };
    ```
 
-> ⚠️ **Important:** Never commit `config.js` to version control. It's already in `.gitignore` to protect your API key.
+> ⚠️ **Important:** Never commit `config.js` to version control. It's already in `.gitignore` to protect your API keys.
 
 ### Installation
 

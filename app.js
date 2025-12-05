@@ -67,14 +67,77 @@ async function fetchStockData() {
 }
 
 async function fetchReport(data) {
-    /** AI goes here **/
+    apiMessage.innerText = 'Generating AI report...'
+    
+    try {
+        const response = await fetch('https://api.openai.com/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${config.OPENAI_API_KEY}`
+            },
+            body: JSON.stringify({
+                model: 'gpt-3.5-turbo',
+                messages: [
+                    {
+                        role: 'system',
+                        content: `You are a stock market analyst. Analyze the provided stock data and generate a concise prediction report. 
+                        Include:
+                        - Brief summary of recent price movements
+                        - Key trends identified
+                        - Short-term prediction (next few days)
+                        - Risk assessment
+                        Keep the response clear and easy to understand for non-experts.`
+                    },
+                    {
+                        role: 'user',
+                        content: `Analyze this stock data and provide a prediction report: ${data}`
+                    }
+                ]
+            })
+        })
+        
+        const result = await response.json()
+        
+        if (result.error) {
+            if (result.error.code === 'insufficient_quota') {
+                throw new Error('OpenAI quota exceeded. Please check your billing at platform.openai.com/account/billing')
+            }
+            throw new Error(result.error.message)
+        }
+        
+        const report = result.choices[0].message.content
+        renderReport(report)
+    } catch (err) {
+        console.error('OpenAI API error:', err)
+        loadingArea.querySelector('p').innerText = err.message || 'Error generating report. Please try again.'
+    }
 }
 
 function renderReport(output) {
     loadingArea.style.display = 'none'
     const outputArea = document.querySelector('.output-panel')
-    const report = document.createElement('p')
-    outputArea.appendChild(report)
-    report.textContent = output
+    const reportContent = document.getElementById('reportContent')
+    
+    // Format the markdown-style output to HTML
+    let formattedOutput = output
+        // Convert **bold** to <strong>
+        .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+        // Convert headers (lines ending with :) to styled headers
+        .replace(/^(#{1,3})\s*(.+)$/gm, '<h3>$2</h3>')
+        // Convert bullet points
+        .replace(/^- (.+)$/gm, '<li>$1</li>')
+        // Wrap consecutive <li> items in <ul>
+        .replace(/(<li>.*<\/li>\n?)+/g, '<ul>$&</ul>')
+        // Convert newlines to breaks for readability
+        .replace(/\n\n/g, '</p><p>')
+        .replace(/\n/g, '<br>')
+    
+    // Wrap in paragraph if not already structured
+    if (!formattedOutput.startsWith('<')) {
+        formattedOutput = '<p>' + formattedOutput + '</p>'
+    }
+    
+    reportContent.innerHTML = formattedOutput
     outputArea.style.display = 'flex'
 }
