@@ -184,6 +184,7 @@ async function fetchReport(stockDataArray) {
         })
         
         const result = await response.json()
+        println('OpenAI API response:', result)
         
         if (result.error) {
             if (result.error.code === 'insufficient_quota') {
